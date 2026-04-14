@@ -1,0 +1,1 @@
+In this project, we would like to explore how music has changed over time, spanning from 1952 to 2025. From timeless classics to era-defining hits and contemporary tracks, by analyzing listening trends and genres, we can reveal how the world's mood and environment may have shaped the sounds of its time.
