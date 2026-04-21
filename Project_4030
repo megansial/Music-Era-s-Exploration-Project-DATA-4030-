@@ -1,0 +1,65 @@
+library(tidyverse)
+library(ggrepel)
+library(patchwork)
+library(gridExtra)
+library(gganimate)
+library(gifski)
+library(plotly)
+
+
+library(readr)
+spotify <- read_csv("spotify_data clean.csv")
+View(spotify)
+
+#Count/freq. of genres in top 5
+#(variable(s): artist_genre)
+
+
+#Count genre
+task1<-spotify |>
+  filter(!is.na(artist_genres))|>
+  group_by(artist_genres)|>
+  summarise(
+    n=n()
+  )
+  
+
+
+  task2<-task1|>
+   slice_max(artist_genres, n = 5) 
+  
+task2
+
+View(spotify)
+
+#create scatterplot with trend lines to see not only the top 3 genres, but also where the other genres fit in that scope
+#(variable(s): artist_genre)
+
+task2<-task1 |>
+  filter(!is.na(artist_genres), !is.na(track_popularity)) |>
+  ggplot(aes(x = artist_genres, y = track_popularity)) +
+  geom_point()
+
+task2
+
+
+#artists that have released the most songs from 2009-2025
+#(variable(s): artist_name, album_total_tracks)
+
+spotify|>
+  mutate(
+    album_release_year = album_release_date %/% 100
+  )|>
+  filter(album_release_year>=2009 && album_release_year<=2025)|>
+  select(artist_name,album_total_tracks,album_release_date)|>
+  arrange(desc(album_total_tracks))
+
+
+
+
+  
+  
+
+
+
+
