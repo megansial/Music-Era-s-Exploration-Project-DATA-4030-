@@ -16,19 +16,16 @@ View(spotify)
 
 
 #Count genre
+
+
 task1<-spotify |>
   filter(!is.na(artist_genres))|>
   group_by(artist_genres)|>
   summarise(
     n=n()
-  )
-  
+  )|>
+  slice_max(order_by= n, n = 5, with_ties = FALSE) 
 
-
-  task2<-task1|>
-   slice_max(artist_genres, n = 5) 
-  
-task2
 
 View(spotify)
 
@@ -36,9 +33,11 @@ View(spotify)
 #(variable(s): artist_genre)
 
 task2<-task1 |>
-  filter(!is.na(artist_genres), !is.na(track_popularity)) |>
-  ggplot(aes(x = artist_genres, y = track_popularity)) +
-  geom_point()
+  filter(!is.na(artist_genres)) |>
+  ggplot(aes(x = artist_genres, y= n)) +
+  geom_point()+
+  labs(x="Artist Genre",
+       y="")
 
 task2
 
