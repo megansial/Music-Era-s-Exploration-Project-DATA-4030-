@@ -1,0 +1,296 @@
+library(tidyverse)
+library(ggrepel)
+library(patchwork)
+library(gridExtra)
+library(gganimate)
+library(gifski)
+library(plotly)
+
+# import dataset
+library(readr)
+spotify <- read_csv("spotify_data clean.csv")
+View(spotify)
+
+# Trend in popularity among songs  
+
+#GEN X - 1965 - 1980
+top10_songs_1965 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1965 & album_release_year <= 1980,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (1965-1980)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_1965
+
+# MILLENIAL GEN - 1981 to 1996
+top10_songs_1981 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1981 & album_release_year <= 1996,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (1981-1996)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_1981
+
+# GEN Z - 1997 to 2012
+top10_songs_1997 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1997 & album_release_year <= 2012,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (1997-2012)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_1997
+
+# GEN ALPHA - 2013 to 2025
+top10_songs_2013 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 2013 & album_release_year <= 2025,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (2013-2025)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_2013
+
+
+
+# 2000 to 2010 
+topSongs_2000s <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 2000 & album_release_year <= 2010,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (2000-2010)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# 2010 to 2020
+top10_songs_2010 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 2010 & album_release_year <= 2020,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (2010-2020)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_2010
+
+#2020 to 2025
+top10_songs_2020 <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 2020 & album_release_year <= 2025,
+         !is.na(track_popularity)) |>
+  select(album_release_year, track_name, artist_name, track_popularity) |>
+  slice_max(track_popularity, n = 10, with_ties = FALSE) |>
+  ggplot(aes(x = reorder(paste(track_name, "-", artist_name), track_popularity),
+             y = track_popularity,
+             fill = factor(album_release_year))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "RdPu") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Top 10 most popular songs (2010-2020)",
+    x = "Track — Artist",
+    y = "Popularity score",
+    fill = "Year"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+top10_songs_2020
+
+#Count/freq. of genres in top 5
+#(variable(s): artist_genre)
+
+#Count genre
+genre_top5 <- spotify |>
+  filter(!is.na(artist_genres), artist_genres != "N/A") |>
+  group_by(artist_genres) |>
+  summarise(n = n()) |>
+  slice_max(n, n = 5)
+
+genre_top5 |>
+  ggplot(aes(x = reorder(artist_genres, n), y = n, fill = artist_genres)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Top 5 genres by frequency",
+    x = "Genre",
+    y = "Count",
+    fill = "Genre"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# create scatterplot with trend lines to see not only the top 3 genres, but also 
+# where the other genres fit in that scope
+#(variable(s): artist_genre)
+top3_genres <- spotify |>
+  filter(!is.na(artist_genres), 
+         artist_genres != "N/A", 
+         artist_genres != "Other") |>
+  group_by(artist_genres) |>
+  summarise(n = n()) |>
+  slice_max(n, n = 3) |>
+  pull(artist_genres)
+
+top3_genres
+
+genre_graphic <- spotify |>
+  filter(!is.na(artist_genres), artist_genres != "N/A",
+         !is.na(track_popularity), track_popularity != "N/A") |>
+  filter(artist_genres %in% top3_genres) |>
+  ggplot(aes(x = artist_genres, y = track_popularity, color = artist_genres)) +
+  geom_jitter(alpha = 0.4, width = 0.2) +
+  geom_smooth(aes(group = artist_genres), method = "lm", se = TRUE) +
+  scale_color_manual(values = setNames(c("#534AB7", "#1D9E75", "#D85A30"), top3_genres)) +
+  labs(
+    title = "Track popularity by genre",
+    x = "Genre",
+    y = "Track popularity",
+    color = "Genre"
+  ) +
+  theme_minimal()
+
+genre_graphic
+
+#artists that have released the most songs from 2009-2025
+#(variable(s): artist_name, album_total_tracks)
+
+spotify|>
+  mutate(
+    album_release_year = as.integer(
+      substr(album_release_date, 1, 4)))|>
+  filter(album_release_year >= 2009 & album_release_year <= 2025)|>
+  select(artist_name, album_total_tracks)|>
+  group_by(artist_name) |>
+  summarise(total_tracks = sum(album_total_tracks, na.rm = TRUE)) |>
+  arrange(desc(total_tracks))
+
+
+spotify |>
+  mutate(
+    album_release_year = as.integer(
+      substr(album_release_date, 1, 4))) |>
+  filter(album_release_year >= 2009 & album_release_year <= 2025) |>
+  select(artist_name, album_total_tracks) |>
+  group_by(artist_name) |>
+  summarise(total_tracks = sum(album_total_tracks, na.rm = TRUE)) |>
+  arrange(desc(total_tracks)) |>
+  slice_max(total_tracks, n = 10) |>
+  ggplot(aes(x = reorder(artist_name, total_tracks), y = total_tracks, fill = artist_name)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Top 10 artists by total tracks (2009-2025)",
+    x = "Artist",
+    y = "Total tracks",
+    fill = "Artist"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
