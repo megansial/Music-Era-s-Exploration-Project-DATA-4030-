@@ -260,22 +260,22 @@ genre_graphic
 #artists that have released the most songs from 2009-2025
 #(variable(s): artist_name, album_total_tracks)
 
-spotify|>
+top_artists <- spotify|>
   mutate(
     album_release_year = as.integer(
       substr(album_release_date, 1, 4)))|>
-  filter(album_release_year >= 2009 & album_release_year <= 2025)|>
+  filter(album_release_year >= 2000 & album_release_year <= 2025)|>
   select(artist_name, album_total_tracks)|>
   group_by(artist_name) |>
   summarise(total_tracks = sum(album_total_tracks, na.rm = TRUE)) |>
   arrange(desc(total_tracks))
 
 
-spotify |>
+top_artists <- spotify |>
   mutate(
     album_release_year = as.integer(
       substr(album_release_date, 1, 4))) |>
-  filter(album_release_year >= 2009 & album_release_year <= 2025) |>
+  filter(album_release_year >= 2000 & album_release_year <= 2025) |>
   select(artist_name, album_total_tracks) |>
   group_by(artist_name) |>
   summarise(total_tracks = sum(album_total_tracks, na.rm = TRUE)) |>
@@ -285,7 +285,7 @@ spotify |>
   geom_col() +
   coord_flip() +
   labs(
-    title = "Top 10 artists by total tracks (2009-2025)",
+    title = "Top 10 artists by total tracks (2000-2025)",
     x = "Artist",
     y = "Total tracks",
     fill = "Artist"
@@ -293,4 +293,5 @@ spotify |>
   theme_minimal() +
   theme(legend.position = "none")
 
+top_artists
 
