@@ -8,13 +8,18 @@ library(plotly)
 
 # import dataset
 library(readr)
-spotify <- read_csv("spotify_data clean.csv")
-View(spotify)
+spotify <- read_csv("DATA 4030/spotify_data clean.csv")
+View(spotify_data_clean)
 
 # Trend in popularity among songs  
+# These are the top 10 songs that have define these generations
 
-#GEN X - 1965 - 1980
-top10_songs_1965 <- spotify |>
+#####################
+#GEN X - 1965 - 1980#
+#####################
+
+# Column Chart
+top10_songs_genX <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
   ) |>
@@ -38,10 +43,52 @@ top10_songs_1965 <- spotify |>
   theme_minimal() +
   theme(legend.position = "right")
 
-top10_songs_1965
+top10_songs_genX
 
-# MILLENIAL GEN - 1981 to 1996
-top10_songs_1981 <- spotify |>
+# Filter the data
+genX_data <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1965 & album_release_year <= 1980,
+         !is.na(track_popularity))
+
+genX_avg <- genX_data |>
+  group_by(album_release_year) |>
+  summarise(avg_popularity = mean(track_popularity, na.rm = TRUE))
+
+# Find the single most popular song that year
+genX_top_song <- genX_data |>
+  group_by(album_release_year) |>
+  slice_max(track_popularity, n = 1, with_ties = FALSE) |>
+  select(album_release_year, track_name)
+
+genX_combined <- left_join(genX_avg, genX_top_song, by = "album_release_year")
+
+# Line Chart
+top_songs_genX <- genX_combined |>
+  ggplot(aes(x = album_release_year, y = avg_popularity)) +
+  geom_line(color = "#534AB7", linewidth = 1) +
+  geom_point(color = "#534AB7", size = 3) +
+  geom_text(aes(label = paste0(round(avg_popularity, 1), "\n", str_wrap(track_name, 30))),
+            vjust = -0.5, size = 3, color = "#534AB7") +
+  geom_smooth(method = "lm", se = TRUE, color = "#D85A30", linetype = "dashed") +
+  scale_x_continuous(breaks = seq(1965, 1980, by = 1)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Trend in average track popularity (1965-1980)",
+    x = "Year",
+    y = "Average popularity score"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+top_songs_genX
+
+###############################
+# MILLENIAL GEN - 1981 to 1996#
+###############################
+top10_songs_millenial <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
   ) |>
@@ -65,10 +112,52 @@ top10_songs_1981 <- spotify |>
   theme_minimal() +
   theme(legend.position = "right")
 
-top10_songs_1981
+top10_songs_millenial
 
-# GEN Z - 1997 to 2012
-top10_songs_1997 <- spotify |>
+# Filter the data
+Millen_data <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1981 & album_release_year <= 1996,
+         !is.na(track_popularity))
+
+Millen_avg <- Millen_data |>
+  group_by(album_release_year) |>
+  summarise(avg_popularity = mean(track_popularity, na.rm = TRUE))
+
+# Find the single most popular song that year
+Millen_top_song <- Millen_data |>
+  group_by(album_release_year) |>
+  slice_max(track_popularity, n = 1, with_ties = FALSE) |>
+  select(album_release_year, track_name)
+
+Millen_combined <- left_join(Millen_avg, Millen_top_song, by = "album_release_year")
+
+# Line Chart
+top_songs_Millen <- Millen_combined |>
+  ggplot(aes(x = album_release_year, y = avg_popularity)) +
+  geom_line(color = "#534AB7", linewidth = 1) +
+  geom_point(color = "#534AB7", size = 3) +
+  geom_text(aes(label = paste0(round(avg_popularity, 1), "\n", str_wrap(track_name, 30))),
+            vjust = -0.5, size = 3, color = "#534AB7") +
+  geom_smooth(method = "lm", se = TRUE, color = "#D85A30", linetype = "dashed") +
+  scale_x_continuous(breaks = seq(1981, 1996, by = 1)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Trend in average track popularity (1981-1996)",
+    x = "Year",
+    y = "Average popularity score"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+top_songs_Millen
+
+#######################
+# GEN Z - 1997 to 2012#
+#######################
+top10_songs_genZ <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
   ) |>
@@ -92,10 +181,52 @@ top10_songs_1997 <- spotify |>
   theme_minimal() +
   theme(legend.position = "right")
 
-top10_songs_1997
+top10_songs_genZ
 
-# GEN ALPHA - 2013 to 2025
-top10_songs_2013 <- spotify |>
+# Filter the data
+genZ_data <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 1997 & album_release_year <= 2012,
+         !is.na(track_popularity))
+
+genZ_avg <- genZ_data |>
+  group_by(album_release_year) |>
+  summarise(avg_popularity = mean(track_popularity, na.rm = TRUE))
+
+# Find the single most popular song that year
+genZ_top_song <- genZ_data |>
+  group_by(album_release_year) |>
+  slice_max(track_popularity, n = 1, with_ties = FALSE) |>
+  select(album_release_year, track_name)
+
+genZ_combined <- left_join(genZ_avg, genZ_top_song, by = "album_release_year")
+
+# Line Chart
+top_songs_genZ <- genZ_combined |>
+  ggplot(aes(x = album_release_year, y = avg_popularity)) +
+  geom_line(color = "#534AB7", linewidth = 1) +
+  geom_point(color = "#534AB7", size = 3) +
+  geom_text(aes(label = paste0(round(avg_popularity, 1), "\n", str_wrap(track_name, 30))),
+            vjust = -0.5, size = 3, color = "#534AB7") +
+  geom_smooth(method = "lm", se = TRUE, color = "#D85A30", linetype = "dashed") +
+  scale_x_continuous(breaks = seq(1997, 2012, by = 1)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Trend in average track popularity (1997-2012)",
+    x = "Year",
+    y = "Average popularity score"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+top_songs_genZ
+
+###########################
+# GEN ALPHA - 2013 to 2025#
+###########################
+top10_songs_genAlpha <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
   ) |>
@@ -119,11 +250,51 @@ top10_songs_2013 <- spotify |>
   theme_minimal() +
   theme(legend.position = "right")
 
-top10_songs_2013
+top10_songs_genAlpha
 
+# Filter the data
+genAlpha_data <- spotify |>
+  mutate(
+    album_release_year = as.integer(substr(album_release_date, 1, 4))
+  ) |>
+  filter(album_release_year >= 2013 & album_release_year <= 2025,
+         !is.na(track_popularity))
 
+genAlpha_avg <- genAlpha_data |>
+  group_by(album_release_year) |>
+  summarise(avg_popularity = mean(track_popularity, na.rm = TRUE))
 
-# 2000 to 2010 
+# Find the single most popular song that year
+genAlpha_top_song <- genAlpha_data |>
+  group_by(album_release_year) |>
+  slice_max(track_popularity, n = 1, with_ties = FALSE) |>
+  select(album_release_year, track_name)
+
+genAlpha_combined <- left_join(genAlpha_avg, genAlpha_top_song, by = "album_release_year")
+
+# Line Chart
+
+top_songs_genAlpha <- genAlpha_combined |>
+  ggplot(aes(x = album_release_year, y = avg_popularity)) +
+  geom_line(color = "#534AB7", linewidth = 1) +
+  geom_point(color = "#534AB7", size = 3) +
+  geom_text(aes(label = paste0(round(avg_popularity, 1), "\n", str_wrap(track_name, 30))),
+            vjust = -0.5, size = 3, color = "#534AB7") +
+  geom_smooth(method = "lm", se = TRUE, color = "#D85A30", linetype = "dashed") +
+  scale_x_continuous(breaks = seq(2013, 2025, by = 1)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10)) +
+  labs(
+    title = "Trend in average track popularity (2013-2025)",
+    x = "Year",
+    y = "Average popularity score"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+top_songs_genAlpha
+##############
+# 2000 to 2010
+##############
 topSongs_2000s <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
@@ -148,7 +319,9 @@ topSongs_2000s <- spotify |>
   theme_minimal() +
   theme(legend.position = "right")
 
+##############
 # 2010 to 2020
+##############
 top10_songs_2010 <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
@@ -175,7 +348,9 @@ top10_songs_2010 <- spotify |>
 
 top10_songs_2010
 
+##############
 #2020 to 2025
+##############
 top10_songs_2020 <- spotify |>
   mutate(
     album_release_year = as.integer(substr(album_release_date, 1, 4))
@@ -295,3 +470,5 @@ top_artists <- spotify |>
 
 top_artists
 
+
+# KSU interactive map with emails of the team members at the bottom of the page 
